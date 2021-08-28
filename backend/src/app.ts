@@ -1,5 +1,5 @@
 import fastify, { FastifyServerOptions } from 'fastify';
-import authRouters from './routers/auth';
+import authRouters from './routers/auth.router';
 
 const buildApp = (options: FastifyServerOptions) => {
   const app = fastify(options)
