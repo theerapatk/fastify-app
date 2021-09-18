@@ -6,10 +6,9 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 { 
-  "username": "test1",
+  "email": "outrctznmmkpgxqbso@sdvgeft.com",
   "password": "test",
-  "email": "test1@test.com",
-  "firstName": "test1",
+  "firstName": "test6",
   "lastName": "test"
 }
 
@@ -18,6 +17,30 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "test1@test.com",
+  "username": "outrctznmmkpgxqbso@sdvgeft.com",
   "password": "test"
+}
+
+###
+POST http://localhost:3000/api/v1/auth/refresh-token
+Content-Type: application/json
+
+{ 
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidGVzdDFAdGVzdC5jb20iLCJmaXJzdE5hbWUiOiJ0ZXN0MSIsImxhc3ROYW1lIjoidGVzdCIsInJvbGVzIjpbIlBva8OpbW9uIFRyYWluZXIiXX0sImlhdCI6MTYzMTk4MjcxNCwiZXhwIjoxNjYzNTQwMzE0LCJpc3MiOiJqb2pvLXRrIn0.twwpJJTRD5XebciW7oFpMbhcIkUPzlH8sjNrnrjco-g"
+}
+
+###
+POST http://localhost:3000/api/v1/auth/email-reset-password
+Content-Type: application/json
+
+{ 
+  "email": "outrctznmmkpgxqbso@sdvgeft.com"
+}
+
+###
+POST http://localhost:3000/api/v1/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MTQ2NDJiMzk3ZTI5YzQ4ZTAxM2YyNDkiLCJlbWFpbCI6Im91dHJjdHpubW1rcGd4cWJzb0BzZHZnZWZ0LmNvbSIsInBhc3N3b3JkIjoiJDJiJDEwJDgvVUQ3b3RXb3BLTkZsekZreWswSXVSdVRVVWlNcGpGWVdNNnV5T3JycUg1akN5a050TmFlIiwiZmlyc3ROYW1lIjoidGVzdDYiLCJsYXN0TmFtZSI6InRlc3QiLCJyb2xlcyI6WyJQb2vDqW1vbiBUcmFpbmVyIl0sImNyZWF0ZWRBdCI6IjIwMjEtMDktMThUMTk6NDk6MDcuOTAwWiIsInVwZGF0ZWRBdCI6IjIwMjEtMDktMThUMTk6NDk6MTYuNzExWiIsImlhdCI6MTYzMTk5NDgxNCwiZXhwIjoxNjMxOTk1MTE0LCJpc3MiOiJqb2pvLXRrIn0.K6FTHW8LN1HMg6yrnVXBCcdV2L79q7pC8D9PUSMNxQE
+Content-Type: application/json
+
+{ 
+  "password": "test1"
 }

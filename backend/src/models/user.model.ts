@@ -1,40 +1,42 @@
-import { Document, Model, model, Schema } from 'mongoose'
-import { UsersSchema } from '../types/models/Users'
+import { getModelForClass, index, prop } from '@typegoose/typegoose';
+// import { Field, ObjectType } from 'type-graphql';
+import { RoleOption } from '../types/enum';
 
-export interface UsersSchemaWithDocument extends UsersSchema, Document {
-  // add more field
+@index({ firstName: 1, lastName: 1 }, { unique: true })
+// @ObjectType({ description: 'User Model' })
+export class User {
+  // @Field()
+  @prop({
+    trim: true,
+    index: {
+      unique: true,
+      partialFilterExpression: { username: { $exists: true } },
+    },
+  })
+  username?: string;
+
+  // @Field()
+  @prop({ unique: true, required: true, trim: true, lowercase: true })
+  email!: string;
+
+  @prop({ required: true })
+  password!: string;
+
+  @prop({ required: true })
+  firstName!: string;
+
+  @prop({ required: true })
+  lastName!: string;
+
+  // @Field(() => [String])
+  @prop({
+    type: String,
+    enum: RoleOption,
+    default: [RoleOption.POKEMON_TRAINER],
+  })
+  roles?: RoleOption[];
 }
 
-const usersSchema = new Schema<UsersSchemaWithDocument>({
-  username: {
-    type: 'string',
-    unique: true,
-    required: true
-  },
-  password: {
-    type: 'string',
-    required: true
-  },
-  email: {
-    type: 'string',
-    unique: true,
-    required: true
-  },
-  firstName: {
-    type: 'string',
-    required: true
-  },
-  lastName: {
-    type: 'string',
-    required: true
-  }
-}, {
-  versionKey: false,
-  timestamps: true
-})
-
-usersSchema.index({ firstName: 1, lastName: 1 }, { unique: true })
-
-const User: Model<UsersSchemaWithDocument> = model('Users', usersSchema)
-
-export default User;
+export const UserModel = getModelForClass(User, {
+  schemaOptions: { versionKey: false, timestamps: true },
+});

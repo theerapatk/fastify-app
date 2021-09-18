@@ -1,19 +1,51 @@
-import { UsersSchemaWithDocument } from '../models/user.model'
-import { createNewUser, login } from '../services/user.service'
-import { LoginBodyRequest, RegisterBodyRequest } from '../types/handlers/auth.type'
+import userService from '../services/user.service';
+import {
+  AuthTokenResponse,
+  EmailResetPasswordRequest,
+  LoginRequest,
+  RefreshTokenRequest,
+  RegisterRequest,
+  ResetPasswordRequest,
+} from '../types/auth';
 
-const handleRegister = async (request: RegisterBodyRequest): Promise<UsersSchemaWithDocument> => {
-  const { username, password, email, firstName, lastName } = request.body
-  const user = await createNewUser({ username, password, email, firstName, lastName })
-  return user
-}
+const register = async (
+  request: RegisterRequest
+): Promise<AuthTokenResponse> => {
+  const { username, password, email, firstName, lastName } = request.body;
+  return await userService.register({
+    username,
+    password,
+    email,
+    firstName,
+    lastName,
+  });
+};
 
-const handleLogin = async (request: LoginBodyRequest) => {
-  const { username, password } = request.body
-  const user = await login(username, password)
-  return user
-}
+const login = async (request: LoginRequest): Promise<AuthTokenResponse> => {
+  const { username, password } = request.body;
+  return await userService.login(username, password);
+};
+
+const refreshToken = async (request: RefreshTokenRequest) => {
+  const { refreshToken } = request.body;
+  return await userService.refreshToken(refreshToken);
+};
+
+const emailResetPassword = async (request: EmailResetPasswordRequest) => {
+  const { email } = request.body;
+  return await userService.emailResetPassword(email);
+};
+
+const resetPassword = async (request: ResetPasswordRequest) => {
+  const { token } = request.query;
+  const { password } = request.body;
+  return await userService.resetPassword(token, password);
+};
 
 export default {
-  handleRegister, handleLogin
-}
+  register,
+  login,
+  refreshToken,
+  emailResetPassword,
+  resetPassword,
+};
