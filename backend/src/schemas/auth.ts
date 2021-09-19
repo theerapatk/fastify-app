@@ -1,6 +1,7 @@
 import { FastifySchema } from 'fastify/types/schema';
 
-const register: FastifySchema = {
+const register: FastifySchema & { tags: string[] } = {
+  tags: ['auth'],
   body: {
     type: 'object',
     required: ['email', 'password', 'firstName', 'lastName'],
@@ -25,9 +26,20 @@ const register: FastifySchema = {
       },
     },
   },
+  response: {
+    201: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string' },
+        refreshToken: { type: 'string' },
+      },
+    },
+  },
 };
 
-const login: FastifySchema = {
+const login: FastifySchema & { tags: string[] } = {
+  tags: ['auth'],
   body: {
     type: 'object',
     required: ['username', 'password'],
@@ -40,9 +52,20 @@ const login: FastifySchema = {
       },
     },
   },
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string' },
+        refreshToken: { type: 'string' },
+      },
+    },
+  },
 };
 
-const refreshToken: FastifySchema = {
+const refreshToken: FastifySchema & { tags: string[] } = {
+  tags: ['auth'],
   body: {
     type: 'object',
     required: ['refreshToken'],
@@ -52,9 +75,20 @@ const refreshToken: FastifySchema = {
       },
     },
   },
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string' },
+        refreshToken: { type: 'string' },
+      },
+    },
+  },
 };
 
-const emailResetPassword: FastifySchema = {
+const emailResetPassword: FastifySchema & { tags: string[] } = {
+  tags: ['auth'],
   body: {
     type: 'object',
     required: ['email'],
@@ -66,9 +100,19 @@ const emailResetPassword: FastifySchema = {
       },
     },
   },
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
+      },
+    },
+  },
 };
 
-const resetPassword: FastifySchema = {
+const resetPassword: FastifySchema & { tags: string[] } = {
+  tags: ['auth'],
   querystring: {
     type: 'object',
     required: ['token'],
@@ -86,6 +130,15 @@ const resetPassword: FastifySchema = {
         type: 'string',
         minLength: 8,
         maxLength: 24,
+      },
+    },
+  },
+  response: {
+    200: {
+      description: 'Successful response',
+      type: 'object',
+      properties: {
+        message: { type: 'string' },
       },
     },
   },

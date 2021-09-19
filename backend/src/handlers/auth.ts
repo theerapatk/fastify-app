@@ -1,5 +1,6 @@
 import mailService, { MailDataRequired } from '@sendgrid/mail';
 import * as bcrypt from 'bcrypt';
+import { FastifyReply } from 'fastify';
 import createError from 'http-errors';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import config from '../config';
@@ -24,7 +25,8 @@ import {
 mailService.setApiKey(config.sendGridApiKey!);
 
 const register = async (
-  request: RegisterRequest
+  request: RegisterRequest,
+  reply: FastifyReply
 ): Promise<AuthTokenResponse> => {
   await validateUniqueFieldConstraint(request.body);
 
@@ -34,6 +36,7 @@ const register = async (
       request.body
     ).save();
     const userResponse = { email, firstName, lastName, roles };
+    reply.code(201);
     return buildAuthTokenResponse(userResponse);
   } catch (error) {
     if (error instanceof Error && error.name === 'MongoServerError') {
