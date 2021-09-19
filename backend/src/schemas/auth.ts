@@ -51,7 +51,15 @@ const register: AuthSchema = {
     409: {
       description: 'Conflict',
       type: 'object',
-      properties: errorProperties,
+      properties: {
+        error: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+            duplicateFields: { type: 'array' },
+          },
+        },
+      },
     },
   },
 };

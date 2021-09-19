@@ -152,27 +152,26 @@ const validateUniqueFieldConstraints = async (doc: User) => {
   if (username) orQuery.push({ username });
   const existingUser = await UserModel.findOne({ $or: orQuery }).lean();
   if (existingUser) {
-    const errors = [];
+    const duplicateFields = [];
     if (username && username === existingUser.username) {
-      errors.push({ field: 'username', value: username });
+      duplicateFields.push({ field: 'username', value: username });
     }
     if (email === existingUser.email) {
-      errors.push({ field: 'email', value: email });
+      duplicateFields.push({ field: 'email', value: email });
     }
     if (
       firstName === existingUser.firstName &&
       lastName === existingUser.lastName
     ) {
-      errors.push({
+      duplicateFields.push({
         field: 'firstName and lastName',
         value: `${firstName} ${lastName}`,
       });
     }
-    if (errors.length > 0) {
-      const duplicateFields = errors.map((error) => error.field);
-      throw new createError.Conflict(
-        `These fields have been registered: ${duplicateFields.join(', ')}`
-      );
+    if (duplicateFields.length > 0) {
+      throw createError(409, 'Duplicate fields in database', {
+        duplicateFields,
+      });
     }
   }
 };

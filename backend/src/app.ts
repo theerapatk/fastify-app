@@ -7,17 +7,35 @@ import fastify, {
 } from 'fastify';
 import authRouters from './routers/auth';
 
+interface DuplicateField {
+  error: {
+    field: string;
+    value: string | number;
+  };
+}
+
+interface ErrorPayload {
+  error: {
+    message: string;
+    duplicateFields?: DuplicateField[];
+  };
+}
+
 const errorHandler = (
-  error: FastifyError,
+  error: FastifyError & { duplicateFields: DuplicateField[] },
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
   reply.log.warn(error.message);
-  reply.status(reply.statusCode || 500).send({
+
+  const errorPayload: ErrorPayload = {
     error: {
       message: error.message,
     },
-  });
+  };
+  if (error.duplicateFields)
+    errorPayload.error.duplicateFields = error.duplicateFields;
+  reply.status(reply.statusCode || 500).send(errorPayload);
 };
 
 const swaggerOption = {
