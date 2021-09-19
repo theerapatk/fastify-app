@@ -1,21 +1,40 @@
-import fastify, { FastifyServerOptions } from 'fastify';
+import fastify, {
+  FastifyError,
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  FastifyServerOptions,
+} from 'fastify';
 import authRouters from './routers/auth.router';
 
-const buildApp = (options: FastifyServerOptions) => {
-  const app = fastify(options)
-  app.get('/', async () => 'OK')
-  app.register(authRouters, { prefix: 'api/v1/auth' })
-  app.setErrorHandler((error, request, reply) => {
-    reply
-      .status(error.statusCode || 500)
-      .send({
-        error: {
-          message: error.message,
-          code: error.code
-        }
-      })
-  })
-  return app
+const errorHandler = (
+  error: FastifyError,
+  request: FastifyRequest,
+  reply: FastifyReply
+) => {
+  reply.status(error.statusCode || 500).send({
+    error: {
+      message: error.message,
+      code: error.code,
+    },
+  });
 };
 
-export default buildApp
+const swaggerOption = {
+  exposeRoute: true,
+  routePrefix: '/documentation',
+  swagger: {
+    info: { title: 'fastify-api' },
+  },
+};
+
+const buildApp = (options: FastifyServerOptions): FastifyInstance => {
+  const app = fastify(options);
+  app.get('/', async () => 'OK');
+  app.register(require('fastify-swagger'), swaggerOption);
+  app.register(authRouters, { prefix: 'api/v1/auth' });
+  app.setErrorHandler(errorHandler);
+  return app;
+};
+
+export default buildApp;
