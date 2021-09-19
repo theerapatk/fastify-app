@@ -1,6 +1,19 @@
 import { FastifySchema } from 'fastify/types/schema';
 
-const register: FastifySchema & { tags: string[] } = {
+interface AuthSchema extends FastifySchema {
+  tags: string[];
+}
+
+const errorProperties = {
+  error: {
+    type: 'object',
+    properties: {
+      message: { type: 'string' },
+    },
+  },
+};
+
+const register: AuthSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -28,17 +41,22 @@ const register: FastifySchema & { tags: string[] } = {
   },
   response: {
     201: {
-      description: 'Successful response',
+      description: 'OK',
       type: 'object',
       properties: {
         accessToken: { type: 'string' },
         refreshToken: { type: 'string' },
       },
     },
+    409: {
+      description: 'Conflict',
+      type: 'object',
+      properties: errorProperties,
+    },
   },
 };
 
-const login: FastifySchema & { tags: string[] } = {
+const login: AuthSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -54,17 +72,22 @@ const login: FastifySchema & { tags: string[] } = {
   },
   response: {
     200: {
-      description: 'Successful response',
+      description: 'OK',
       type: 'object',
       properties: {
         accessToken: { type: 'string' },
         refreshToken: { type: 'string' },
       },
     },
+    401: {
+      description: 'Unauthorized',
+      type: 'object',
+      properties: errorProperties,
+    },
   },
 };
 
-const refreshToken: FastifySchema & { tags: string[] } = {
+const refreshToken: AuthSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -77,17 +100,32 @@ const refreshToken: FastifySchema & { tags: string[] } = {
   },
   response: {
     200: {
-      description: 'Successful response',
+      description: 'OK',
       type: 'object',
       properties: {
         accessToken: { type: 'string' },
         refreshToken: { type: 'string' },
       },
     },
+    400: {
+      description: 'Bad Request',
+      type: 'object',
+      properties: errorProperties,
+    },
+    401: {
+      description: 'Unauthorized',
+      type: 'object',
+      properties: errorProperties,
+    },
+    500: {
+      description: 'Internal Server Error',
+      type: 'object',
+      properties: errorProperties,
+    },
   },
 };
 
-const emailResetPassword: FastifySchema & { tags: string[] } = {
+const emailResetPassword: AuthSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -102,16 +140,26 @@ const emailResetPassword: FastifySchema & { tags: string[] } = {
   },
   response: {
     200: {
-      description: 'Successful response',
+      description: 'OK',
       type: 'object',
       properties: {
         message: { type: 'string' },
       },
     },
+    404: {
+      description: 'Not Found',
+      type: 'object',
+      properties: errorProperties,
+    },
+    502: {
+      description: 'Bad Gateway',
+      type: 'object',
+      properties: errorProperties,
+    },
   },
 };
 
-const resetPassword: FastifySchema & { tags: string[] } = {
+const resetPassword: AuthSchema = {
   tags: ['auth'],
   querystring: {
     type: 'object',
@@ -135,11 +183,26 @@ const resetPassword: FastifySchema & { tags: string[] } = {
   },
   response: {
     200: {
-      description: 'Successful response',
+      description: 'OK',
       type: 'object',
       properties: {
         message: { type: 'string' },
       },
+    },
+    400: {
+      description: 'Bad Request',
+      type: 'object',
+      properties: errorProperties,
+    },
+    404: {
+      description: 'Not Found',
+      type: 'object',
+      properties: errorProperties,
+    },
+    500: {
+      description: 'Internal Server Error',
+      type: 'object',
+      properties: errorProperties,
     },
   },
 };

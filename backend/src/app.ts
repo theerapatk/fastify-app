@@ -13,10 +13,9 @@ const errorHandler = (
   reply: FastifyReply
 ) => {
   reply.log.warn(error.message);
-  reply.status(error.statusCode || 500).send({
+  reply.status(reply.statusCode || 500).send({
     error: {
       message: error.message,
-      code: error.code,
     },
   });
 };
@@ -40,9 +39,9 @@ const swaggerOption = {
     produces: ['application/json'],
     tags: [{ name: 'auth', description: 'Authentication related end-points' }],
     securityDefinitions: {
-      apiKey: {
+      Bearer: {
         type: 'apiKey',
-        name: 'apiKey',
+        name: 'Authorization',
         in: 'header',
       },
     },

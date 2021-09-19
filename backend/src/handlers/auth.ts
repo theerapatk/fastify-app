@@ -28,7 +28,7 @@ const register = async (
   request: RegisterRequest,
   reply: FastifyReply
 ): Promise<AuthTokenResponse> => {
-  await validateUniqueFieldConstraint(request.body);
+  await validateUniqueFieldConstraints(request.body);
 
   try {
     request.body.password = hashPassword(request.body.password);
@@ -64,9 +64,8 @@ const login = async (request: LoginRequest): Promise<AuthTokenResponse> => {
 };
 
 const refreshToken = async (request: RefreshTokenRequest) => {
-  const { refreshToken } = request.body;
-
   try {
+    const { refreshToken } = request.body;
     if (!refreshToken) throw new createError.BadRequest();
 
     const decodedToken = verify(
@@ -92,11 +91,8 @@ const refreshToken = async (request: RefreshTokenRequest) => {
 };
 
 const emailResetPassword = async (request: EmailResetPasswordRequest) => {
-  const { email } = request.body;
-
   try {
-    if (!email) throw new createError.BadRequest('Email is required');
-
+    const { email } = request.body;
     const user = await UserModel.findOne({ email }).lean();
     if (!user) throw new createError.NotFound('Email not found');
 
@@ -122,10 +118,9 @@ const emailResetPassword = async (request: EmailResetPasswordRequest) => {
 };
 
 const resetPassword = async (request: ResetPasswordRequest) => {
-  const { token } = request.query;
-  const { password } = request.body;
-
   try {
+    const { token } = request.query;
+    const { password } = request.body;
     const decodedToken = verify(
       token,
       config.token.access as string
@@ -134,7 +129,7 @@ const resetPassword = async (request: ResetPasswordRequest) => {
       email: decodedToken.user.email,
       password: decodedToken.user.password,
     }).lean();
-    if (!user) throw new createError.NotFound('Invalid link');
+    if (!user) throw new createError.NotFound('Invalid token');
 
     const hashedPassword = hashPassword(password);
     const updatedUser = await UserModel.findOneAndUpdate(
@@ -151,7 +146,7 @@ const resetPassword = async (request: ResetPasswordRequest) => {
   }
 };
 
-const validateUniqueFieldConstraint = async (doc: User) => {
+const validateUniqueFieldConstraints = async (doc: User) => {
   const { username, email, firstName, lastName } = doc;
   const orQuery: {}[] = [{ email }, { firstName, lastName }];
   if (username) orQuery.push({ username });
