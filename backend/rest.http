@@ -6,9 +6,9 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 { 
-  "email": "outrctznmmkpgxqbso@sdvgeft.com",
+  "email": "xfcnwmlminkydzttzm@pp7rvv.com",
   "password": "test",
-  "firstName": "test6",
+  "firstName": "test7",
   "lastName": "test"
 }
 
@@ -17,8 +17,8 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "outrctznmmkpgxqbso@sdvgeft.com",
-  "password": "test"
+  "username": "xfcnwmlminkydzttzm@pp7rvv.com",
+  "password": "test1"
 }
 
 ###
@@ -26,7 +26,7 @@ POST http://localhost:3000/api/v1/auth/refresh-token
 Content-Type: application/json
 
 { 
-  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoidGVzdDFAdGVzdC5jb20iLCJmaXJzdE5hbWUiOiJ0ZXN0MSIsImxhc3ROYW1lIjoidGVzdCIsInJvbGVzIjpbIlBva8OpbW9uIFRyYWluZXIiXX0sImlhdCI6MTYzMTk4MjcxNCwiZXhwIjoxNjYzNTQwMzE0LCJpc3MiOiJqb2pvLXRrIn0.twwpJJTRD5XebciW7oFpMbhcIkUPzlH8sjNrnrjco-g"
+  "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImVtYWlsIjoieGZjbndtbG1pbmt5ZHp0dHptQHBwN3J2di5jb20iLCJmaXJzdE5hbWUiOiJ0ZXN0NyIsImxhc3ROYW1lIjoidGVzdCIsInJvbGVzIjpbIlBva8OpbW9uIFRyYWluZXIiXX0sImlhdCI6MTYzMjA0OTExMCwiZXhwIjoxNjYzNjA2NzEwLCJpc3MiOiJqb2pvLXRrIn0.bkfK32Dx_KBhPmW7FPat7rXlmCzL_fjJhJliOJ3QYkA"
 }
 
 ###
@@ -34,11 +34,11 @@ POST http://localhost:3000/api/v1/auth/email-reset-password
 Content-Type: application/json
 
 { 
-  "email": "outrctznmmkpgxqbso@sdvgeft.com"
+  "email": "xfcnwmlminkydzttzm@pp7rvv.com"
 }
 
 ###
-POST http://localhost:3000/api/v1/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxNDY0MmIzOTdlMjljNDhlMDEzZjI0OSIsImVtYWlsIjoib3V0cmN0em5tbWtwZ3hxYnNvQHNkdmdlZnQuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkOC9VRDdvdFdvcEtORmx6Rmt5azBJdVJ1VFVVaU1wakZZV002dXlPcnJxSDVqQ3lrTnROYWUiLCJmaXJzdE5hbWUiOiJ0ZXN0NiIsImxhc3ROYW1lIjoidGVzdCIsInJvbGVzIjpbIlBva8OpbW9uIFRyYWluZXIiXSwiY3JlYXRlZEF0IjoiMjAyMS0wOS0xOFQxOTo0OTowNy45MDBaIiwidXBkYXRlZEF0IjoiMjAyMS0wOS0xOFQxOTo1MzozNC43MTBaIn0sImlhdCI6MTYzMTk5NDk3MCwiZXhwIjoxNjMxOTk1MjcwLCJpc3MiOiJqb2pvLXRrIn0.FgrVPbpYFwdwS2xe9WgHrXVS-xXR9vashY6KsP4aiyw
+POST http://localhost:3000/api/v1/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxNDcxN2JlOWFkMDA2NWRhMjljYWY3YiIsImVtYWlsIjoieGZjbndtbG1pbmt5ZHp0dHptQHBwN3J2di5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRNQTZySkc3M0IzNDFoOEJQWXVhWkp1VUlRWkNkaHIvUkhub1NablhlWnZYcFBod1JsSEVjbSIsImZpcnN0TmFtZSI6InRlc3Q3IiwibGFzdE5hbWUiOiJ0ZXN0Iiwicm9sZXMiOlsiUG9rw6ltb24gVHJhaW5lciJdLCJjcmVhdGVkQXQiOiIyMDIxLTA5LTE5VDEwOjU4OjA2LjQ3OFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTA5LTE5VDEwOjU4OjA2LjQ3OFoifSwiaWF0IjoxNjMyMDQ5MjM4LCJleHAiOjE2MzIwNDk0MTgsImlzcyI6Impvam8tdGsifQ.T41AawejkDTLlKYvQI8EQOhM2Bwy3qnfCxiRSmLBe3Q
 Content-Type: application/json
 
 { 

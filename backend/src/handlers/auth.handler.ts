@@ -21,6 +21,8 @@ import {
   signJwtToken,
 } from '../utils';
 
+mailService.setApiKey(config.sendGridApiKey!);
+
 const register = async (
   request: RegisterRequest
 ): Promise<AuthTokenResponse> => {

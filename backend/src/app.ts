@@ -12,6 +12,7 @@ const errorHandler = (
   request: FastifyRequest,
   reply: FastifyReply
 ) => {
+  reply.log.warn(error.message);
   reply.status(error.statusCode || 500).send({
     error: {
       message: error.message,
