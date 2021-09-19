@@ -7,17 +7,18 @@ Content-Type: application/json
 
 { 
   "email": "test@test.com",
-  "password": "12345678",
+  "password": "1234568",
   "firstName": "test",
   "lastName": "test"
 }
 
 ###
+# @name login
 POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "xfcnwmlminkydzttzm@pp7rvv.com",
+  "username": "test@test.com",
   "password": "test"
 }
 
@@ -44,3 +45,11 @@ Content-Type: application/json
 { 
   "password": "test1ssssss"
 }
+
+###
+@accessToken = {{login.response.body.accessToken}}
+
+###
+GET http://localhost:3000/api/v1/auth/guard
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
