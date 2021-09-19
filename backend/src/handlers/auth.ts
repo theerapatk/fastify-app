@@ -3,7 +3,7 @@ import * as bcrypt from 'bcrypt';
 import createError from 'http-errors';
 import { JwtPayload, verify } from 'jsonwebtoken';
 import config from '../config';
-import { User, UserModel } from '../models/user.model';
+import { User, UserModel } from '../models/user';
 import {
   AuthTokenResponse,
   EmailResetPasswordRequest,

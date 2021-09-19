@@ -5,7 +5,7 @@ import fastify, {
   FastifyRequest,
   FastifyServerOptions,
 } from 'fastify';
-import authRouters from './routers/auth.router';
+import authRouters from './routers/auth';
 
 const errorHandler = (
   error: FastifyError,
