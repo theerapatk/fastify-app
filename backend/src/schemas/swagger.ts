@@ -1,6 +1,7 @@
-export const SwaggerOption = {
+import { SwaggerOptions } from 'fastify-swagger';
+
+export const SwaggerOption: SwaggerOptions = {
   exposeRoute: true,
-  routePrefix: '/documentation',
   swagger: {
     info: {
       title: 'fastify-app api',

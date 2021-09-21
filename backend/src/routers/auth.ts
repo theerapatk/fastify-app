@@ -3,7 +3,10 @@ import authHandler from '../handlers/auth';
 import authSchema from '../schemas/auth';
 
 const authRouters = async (
-  app: FastifyInstance & { auth?: any; authenticate?: any }
+  app: FastifyInstance & {
+    auth?: any;
+    authenticate?: any;
+  }
 ) => {
   app.post('/register', { schema: authSchema.register }, authHandler.register);
   app.post('/login', { schema: authSchema.login }, authHandler.login);

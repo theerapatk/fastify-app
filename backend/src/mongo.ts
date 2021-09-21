@@ -1,5 +1,5 @@
 import { FastifyInstance } from 'fastify';
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose';
 import config from './config';
 
 const connectMongoDB = async (app: FastifyInstance) => {
