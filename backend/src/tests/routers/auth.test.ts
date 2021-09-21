@@ -19,7 +19,7 @@ describe('/api/v1/auth', () => {
     password: registerBody.password,
   };
 
-  it('POST /register should register a user', async () => {
+  it('POST /register should register user', async () => {
     const response = await app.inject({
       url: '/api/v1/auth/register',
       method: 'POST',
@@ -30,7 +30,84 @@ describe('/api/v1/auth', () => {
     expectTokenResponse(response, registerBody);
   });
 
-  it('POST /login should register a user', async () => {
+  [
+    {
+      body: {
+        email: 'testtest.com',
+        password: '1245678',
+        firstName: 'test',
+        lastName: 'test',
+      },
+      errorFieldName: 'email',
+    },
+    {
+      body: {
+        email: 'test@test.com',
+        password: '123678',
+        firstName: 'test',
+        lastName: 'test',
+      },
+      errorFieldName: 'password',
+    },
+    {
+      body: {
+        email: 'test@test.com',
+        password: '12345678',
+        firstName: 'teASDuihasddddjkahsdSADUIUYUSDdst',
+        lastName: 'test',
+      },
+      errorFieldName: 'firstName',
+    },
+    {
+      body: {
+        email: 'test@test.com',
+        password: '12345678',
+        firstName: 'test',
+      },
+      errorFieldName: 'lastName',
+    },
+  ].forEach((testCase) => {
+    it(`POST /register should validate request given '${testCase.errorFieldName}' is invalid`, async () => {
+      const response = await app.inject({
+        url: '/api/v1/auth/register',
+        method: 'POST',
+        payload: testCase.body,
+      });
+
+      expect(response.statusCode).toBe(400);
+      expect(response.json().error.message).toContain(testCase.errorFieldName);
+    });
+  });
+
+  it(`POST /register should handle duplicate fields in database`, async () => {
+    await app.inject({
+      url: '/api/v1/auth/register',
+      method: 'POST',
+      payload: registerBody,
+    });
+
+    const response = await app.inject({
+      url: '/api/v1/auth/register',
+      method: 'POST',
+      payload: registerBody,
+    });
+
+    app.log.warn(response.json());
+    expect(response.statusCode).toBe(409);
+    expect(response.json().error.message).toEqual(
+      'Duplicate fields in database'
+    );
+    const duplicateFields = response.json().error.duplicateFields;
+    expect(duplicateFields.length).toEqual(2);
+    expect(duplicateFields[0].field).toEqual('email');
+    expect(duplicateFields[0].value).toEqual(registerBody.email);
+    expect(duplicateFields[1].field).toEqual('firstName and lastName');
+    expect(duplicateFields[1].value).toEqual(
+      `${registerBody.firstName} ${registerBody.lastName}`
+    );
+  });
+
+  it('POST /login should login user', async () => {
     await app.inject({
       url: '/api/v1/auth/register',
       method: 'POST',
@@ -47,7 +124,7 @@ describe('/api/v1/auth', () => {
     expectTokenResponse(response, registerBody);
   });
 
-  it('POST /refresh-token should register a user', async () => {
+  it('POST /refresh-token should refresh token', async () => {
     const registerResponse = await app.inject({
       url: '/api/v1/auth/register',
       method: 'POST',
@@ -66,9 +143,9 @@ describe('/api/v1/auth', () => {
     expectTokenResponse(response, registerBody);
   });
 
-  test.todo('POST /email-reset-password');
-  test.todo('POST /reset-password');
-  test.todo('GET /guard');
+  it.todo('POST /email-reset-password should email a reset password link');
+  it.todo('POST /reset-password should reset password');
+  it.todo('GET /guard should verify jwt token before doing handler');
 
   const expectTokenResponse = (
     response: LightMyRequest.Response,
