@@ -46,7 +46,7 @@ interface Props {
   pokemon: Pokemon;
 }
 
-const PokemonDetailTabs: React.FC<Props> = ({ pokemon }: Props) => {
+const PokemonDetailTabs: React.FC<Props> = ({ pokemon }) => {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 

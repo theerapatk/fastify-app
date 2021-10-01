@@ -109,9 +109,7 @@ interface MainAppBarProps {
   setSearchText: React.Dispatch<React.SetStateAction<string>>;
 }
 
-const MainAppBar: React.FC<MainAppBarProps> = ({
-  setSearchText,
-}: MainAppBarProps) => {
+const MainAppBar: React.FC<MainAppBarProps> = ({ setSearchText }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);

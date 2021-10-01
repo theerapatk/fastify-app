@@ -38,7 +38,7 @@ export interface Pokemon {
   sprites: Sprites;
 }
 
-const PokemonCardContainer: React.FC<Props> = ({ searchText }: Props) => {
+const PokemonCardContainer: React.FC<Props> = ({ searchText }) => {
   const [nextUrl, setNextUrl] = useState('');
   const [pokemons, setPokemons] = useState<any[]>([]);
 

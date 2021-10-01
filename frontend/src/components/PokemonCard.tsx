@@ -61,9 +61,7 @@ interface PokemonCardProps {
   pokemon: Pokemon;
 }
 
-const PokemonCard: React.FC<PokemonCardProps> = ({
-  pokemon,
-}: PokemonCardProps) => {
+const PokemonCard: React.FC<PokemonCardProps> = ({ pokemon }) => {
   const [openDialog, setOpenDialog] = useState(false);
 
   const getTitle = () => {
