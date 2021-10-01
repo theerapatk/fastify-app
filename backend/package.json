@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "test": "jest --coverage --runInBand --detectOpenHandles",
-    "test:watch": "jest --watch --runInBand",
+    "test": "jest --coverage --runInBand --detectOpenHandles --verbose",
+    "test:watch": "jest --watch --runInBand --verbose",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js"
   },

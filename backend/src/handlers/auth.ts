@@ -66,8 +66,6 @@ const login = async (request: LoginRequest): Promise<AuthTokenResponse> => {
 const refreshToken = async (request: RefreshTokenRequest) => {
   try {
     const { refreshToken } = request.body;
-    if (!refreshToken) throw new createError.BadRequest();
-
     const decodedToken = verify(
       refreshToken,
       config.token.refresh as string
@@ -105,6 +103,7 @@ const emailResetPassword = async (request: EmailResetPasswordRequest) => {
                  <p>Please use below link to reset your password</p>
                  <a href='http://localhost:3000/api/v1/auth/reset-password?token=${token}' target='blank'>Reset Password</a>
              </div>`,
+      mailSettings: { sandboxMode: { enable: config.env === 'test' } },
     };
 
     const response = await mailService.send(message);

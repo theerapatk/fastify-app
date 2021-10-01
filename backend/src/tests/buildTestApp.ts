@@ -5,7 +5,6 @@ import buildApp from '../app';
 import { UserModel } from '../models/user';
 import setupEnv from './setupEnv';
 
-// const clearDatabaseSql = `DELETE FROM notes; DELETE FROM users;`
 const logger = pino({
   prettyPrint: {
     colorize: true,
@@ -13,11 +12,12 @@ const logger = pino({
     ignore: 'pid,hostname',
     singleLine: true,
   },
+  level: 'warn',
 });
 
 export const buildTestApp = (): FastifyInstance => {
   setupEnv();
-  const app = buildApp({});
+  const app = buildApp({ logger });
 
   beforeAll(async () => {
     await mongoose.connect(process.env.MONGO_URI as string);
