@@ -65,7 +65,7 @@ const PokemonCardContainer: React.FC<Props> = ({ searchText }) => {
       });
       Promise.allSettled(promises).then(() => {
         if (nextUrl) {
-          // setPokemons([...pokemons, ...data.results]);
+          setPokemons([...pokemons, ...data.results]);
         } else {
           setPokemons(data.results);
         }
