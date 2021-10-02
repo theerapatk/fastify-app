@@ -142,7 +142,7 @@ describe('/api/v1/users', () => {
       );
     });
 
-    it('should validate request given invalid id format', async () => {
+    it('should validate request given id format is invalid', async () => {
       const response = await app.inject({
         url: `${apiPrefix}/this-is-invalid-id`,
         method: 'GET',
@@ -160,5 +160,3 @@ describe('/api/v1/users', () => {
     });
   });
 });
-
-// test.todo('test');
