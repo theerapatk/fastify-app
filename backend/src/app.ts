@@ -6,6 +6,7 @@ import fastify, {
   FastifyServerOptions,
 } from 'fastify';
 import fastifyAuth from 'fastify-auth';
+import fastifyHelmet from 'fastify-helmet';
 import fastifySwagger from 'fastify-swagger';
 import authPlugin from './plugins/auth';
 import authRouters from './routers/auth';
@@ -34,6 +35,7 @@ const buildApp = (options: FastifyServerOptions): FastifyInstance => {
   const app = fastify(options);
   app.get('/', async () => 'OK');
   app.register(fastifySwagger, SwaggerOption);
+  app.register(fastifyHelmet);
   app.register(fastifyAuth);
   app.register(authPlugin);
   app.register(authRouters, { prefix: 'api/v1/auth' });

@@ -2,7 +2,7 @@ import mailService from '@sendgrid/mail';
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/user';
-import { RoleOption } from '../../types/enum';
+import { RoleOption } from '../../utils/enum';
 import { buildTestApp } from '../buildTestApp';
 
 const app = buildTestApp();

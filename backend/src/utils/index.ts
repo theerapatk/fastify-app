@@ -2,6 +2,7 @@ import { Secret, sign, SignOptions } from 'jsonwebtoken';
 import config from '../config';
 import { UserResponse } from '../types/auth';
 import * as bcrypt from 'bcrypt';
+import { RoleOption } from './enum';
 
 export const hashPassword = (plainPassword: string): string => {
   const salt = bcrypt.genSaltSync(10);
@@ -14,6 +15,10 @@ export const getAccessToken = (user: UserResponse): string => {
 
 export const getRefreshToken = (user: UserResponse): string => {
   return signJwtToken({ user }, config.token.refresh as string, '1y');
+};
+
+export const isAdmin = (roles: RoleOption[]): boolean => {
+  return roles.includes(RoleOption.ADMIN);
 };
 
 export const signJwtToken = (

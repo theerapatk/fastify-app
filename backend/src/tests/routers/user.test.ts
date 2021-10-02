@@ -1,5 +1,7 @@
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
+import { UserModel } from '../../models/user';
+import { RoleOption } from '../../utils/enum';
 import { buildTestApp } from '../buildTestApp';
 // import { register } from './auth.test';
 
@@ -24,6 +26,27 @@ describe('/api/v1/users', () => {
     });
   };
 
+  const login = async (payload: {
+    username: string;
+    password: string;
+  }): Promise<LightMyRequestResponse> => {
+    return app.inject({
+      url: '/api/v1/auth/login',
+      method: 'POST',
+      payload,
+    });
+  };
+
+  beforeEach(async () => {
+    await new UserModel({
+      email: 'admin@admin.com',
+      password: '$2b$10$Uf/MpLYACZS0kqBQSx0eYe4fVKNjhGjm8wS0zzqgXugqG08Ee9/3G',
+      firstName: 'admin',
+      lastName: 'admin',
+      roles: [RoleOption.ADMIN],
+    }).save();
+  });
+
   describe('GET /', () => {
     const getUsers = async (
       accessToken: string
@@ -37,32 +60,43 @@ describe('/api/v1/users', () => {
       });
     };
 
-    it('should get all users', async () => {
+    it(`should get all users given the role is 'Admin'`, async () => {
       await register();
-      const registerResponse = await register({
-        email: 'test1@test.com',
-        password: '12345678',
-        firstName: 'test1',
-        lastName: 'test',
+      const loginResponse = await login({
+        username: 'admin@admin.com',
+        password: 'test',
       });
-
-      const response = await getUsers(registerResponse.json().accessToken);
+      const response = await getUsers(loginResponse.json().accessToken);
 
       expect(response.statusCode).toBe(200);
       expect(response.json()).toEqual([
         expect.objectContaining({
+          email: 'admin@admin.com',
+          firstName: 'admin',
+          lastName: 'admin',
+          roles: [RoleOption.ADMIN],
+        }),
+        expect.objectContaining({
           email: 'test@test.com',
           firstName: 'test',
           lastName: 'test',
-          roles: ['Pokémon Trainer'],
-        }),
-        expect.objectContaining({
-          email: 'test1@test.com',
-          firstName: 'test1',
-          lastName: 'test',
-          roles: ['Pokémon Trainer'],
+          roles: [RoleOption.POKEMON_TRAINER],
         }),
       ]);
+    });
+
+    it('should not allow other roles to access this resource', async () => {
+      await register();
+      const loginResponse = await login({
+        username: 'test@test.com',
+        password: '12345678',
+      });
+      const response = await getUsers(loginResponse.json().accessToken);
+
+      expect(response.statusCode).toBe(403);
+      expect(response.json().error.message).toEqual(
+        'You are not allowed to access this resource'
+      );
     });
 
     it('should validate request given request headers is not provided', async () => {
@@ -115,19 +149,43 @@ describe('/api/v1/users', () => {
           email: 'test@test.com',
           firstName: 'test',
           lastName: 'test',
-          roles: ['Pokémon Trainer'],
+          roles: [RoleOption.POKEMON_TRAINER],
         })
       );
     });
 
-    it('should handle given the user not found', async () => {
+    it(`should get any users given the role is 'Admin'`, async () => {
+      await register();
+      const loginResponse = await login({
+        username: 'admin@admin.com',
+        password: 'test',
+      });
+
+      const token = loginResponse.json().accessToken;
+      const user = await UserModel.findOne({ email: 'test@test.com' }).lean();
+      const response = await getUser(token, user?._id);
+
+      expect(response.statusCode).toBe(200);
+      expect(response.json()).toEqual(
+        expect.objectContaining({
+          email: 'test@test.com',
+          firstName: 'test',
+          lastName: 'test',
+          roles: [RoleOption.POKEMON_TRAINER],
+        })
+      );
+    });
+
+    it(`should only allow to get user's own resource given the role is not 'Admin'`, async () => {
       const registerResponse = await register();
 
       const token = registerResponse.json().accessToken;
       const response = await getUser(token, '61499de2e413b105305050e8');
 
-      expect(response.statusCode).toBe(404);
-      expect(response.json().error.message).toEqual('User not found');
+      expect(response.statusCode).toBe(403);
+      expect(response.json().error.message).toEqual(
+        "You are not allowed to access other user's resource"
+      );
     });
 
     it('should validate request given request headers is not provided', async () => {

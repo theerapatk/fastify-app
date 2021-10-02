@@ -18,7 +18,7 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "test@test.com",
+  "username": "test1@test.com",
   "password": "test"
 }
 
@@ -60,6 +60,6 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/api/v1/users/61499de2e413b105305050e8
+GET http://localhost:3000/api/v1/users/614602936772f543ddc15dd2
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
