@@ -25,11 +25,6 @@ const authRouters = async (
     { schema: authSchema.resetPassword },
     authHandler.resetPassword
   );
-  app.get(
-    '/guard',
-    { preHandler: app.auth([app.authenticate]) },
-    async () => 'OK'
-  );
 };
 
 export default authRouters;

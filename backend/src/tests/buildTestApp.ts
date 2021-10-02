@@ -12,7 +12,7 @@ const logger = pino({
     ignore: 'pid,hostname',
     singleLine: true,
   },
-  level: 'warn',
+  level: 'error',
 });
 
 export const buildTestApp = (): FastifyInstance => {

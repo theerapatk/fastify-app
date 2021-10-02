@@ -363,46 +363,6 @@ describe('/api/v1/auth', () => {
     });
   });
 
-  describe('GET /guard', () => {
-    const testGuard = async (
-      accessToken: string
-    ): Promise<LightMyRequestResponse> => {
-      return app.inject({
-        url: '/api/v1/auth/guard',
-        method: 'GET',
-        headers: {
-          authorization: `Bearer ${accessToken}`,
-        },
-      });
-    };
-
-    it('should access jwt guard route', async () => {
-      const registerResponse = await register();
-      const response = await testGuard(registerResponse.json().accessToken);
-
-      expect(response.statusCode).toBe(200);
-    });
-
-    it('should validate request given request headers is not provided', async () => {
-      const response = await app.inject({
-        url: '/api/v1/auth/guard',
-        method: 'GET',
-      });
-
-      expect(response.statusCode).toBe(401);
-      expect(response.json().error.message).toEqual(
-        'No Authorization was found in request.headers'
-      );
-    });
-
-    it('should verify jwt token before doing route handler', async () => {
-      const response = await testGuard('test.token');
-
-      expect(response.statusCode).toBe(401);
-      expect(response.json().error.message).toContain('jwt malformed');
-    });
-  });
-
   const expectTokenResponse = (
     response: LightMyRequestResponse,
     expectedBody: Record<string, string | undefined>
@@ -440,7 +400,13 @@ describe('/api/v1/auth', () => {
       if (key === 'roles') {
         expect(decodedToken.user[key]).toEqual([RoleOption.POKEMON_TRAINER]);
       } else {
-        expect(decodedToken.user[key]).toEqual(expectedBody[key]);
+        if (key !== '_id') {
+          expect(decodedToken.user[key]).toEqual(expectedBody[key]);
+        } else {
+          expect(decodedToken.user).toEqual(
+            expect.objectContaining({ _id: expect.any(String) })
+          );
+        }
       }
     });
   };

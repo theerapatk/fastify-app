@@ -32,10 +32,10 @@ const register = async (
 
   try {
     request.body.password = hashPassword(request.body.password);
-    const { email, firstName, lastName, roles } = await new UserModel(
+    const { _id, email, firstName, lastName, roles } = await new UserModel(
       request.body
     ).save();
-    const userResponse = { email, firstName, lastName, roles };
+    const userResponse = { _id, email, firstName, lastName, roles };
     reply.code(201);
     return buildAuthTokenResponse(userResponse);
   } catch (error) {
@@ -59,8 +59,8 @@ const login = async (request: LoginRequest): Promise<AuthTokenResponse> => {
   const matched = bcrypt.compareSync(password, user.password);
   if (!matched) throw new createError.Unauthorized('Invalid credentials');
 
-  const { email, firstName, lastName, roles } = user;
-  return buildAuthTokenResponse({ email, firstName, lastName, roles });
+  const { _id, email, firstName, lastName, roles } = user;
+  return buildAuthTokenResponse({ _id, email, firstName, lastName, roles });
 };
 
 const refreshToken = async (request: RefreshTokenRequest) => {
@@ -75,9 +75,9 @@ const refreshToken = async (request: RefreshTokenRequest) => {
     }).lean();
     if (!user) throw new createError.Unauthorized();
 
-    const { email, firstName, lastName, roles } = user;
+    const { _id, email, firstName, lastName, roles } = user;
     return {
-      accessToken: getAccessToken({ email, firstName, lastName, roles }),
+      accessToken: getAccessToken({ _id, email, firstName, lastName, roles }),
       refreshToken,
     };
   } catch (error) {

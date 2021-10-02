@@ -53,3 +53,13 @@ Content-Type: application/json
 GET http://localhost:3000/api/v1/auth/guard
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
+
+###
+GET http://localhost:3000/api/v1/users
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+###
+GET http://localhost:3000/api/v1/users/61499de2e413b105305050e8
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json

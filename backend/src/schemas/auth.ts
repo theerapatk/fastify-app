@@ -1,10 +1,10 @@
 import { FastifySchema } from 'fastify/types/schema';
 
-interface AuthSchema extends FastifySchema {
+export interface TagsSchema extends FastifySchema {
   tags: string[];
 }
 
-const errorProperties = {
+export const errorProperties = {
   error: {
     type: 'object',
     properties: {
@@ -13,7 +13,7 @@ const errorProperties = {
   },
 };
 
-const register: AuthSchema = {
+const register: TagsSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -64,7 +64,7 @@ const register: AuthSchema = {
   },
 };
 
-const login: AuthSchema = {
+const login: TagsSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -95,7 +95,7 @@ const login: AuthSchema = {
   },
 };
 
-const refreshToken: AuthSchema = {
+const refreshToken: TagsSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -133,7 +133,7 @@ const refreshToken: AuthSchema = {
   },
 };
 
-const emailResetPassword: AuthSchema = {
+const emailResetPassword: TagsSchema = {
   tags: ['auth'],
   body: {
     type: 'object',
@@ -167,7 +167,7 @@ const emailResetPassword: AuthSchema = {
   },
 };
 
-const resetPassword: AuthSchema = {
+const resetPassword: TagsSchema = {
   tags: ['auth'],
   querystring: {
     type: 'object',

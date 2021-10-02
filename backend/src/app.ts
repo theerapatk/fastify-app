@@ -9,6 +9,7 @@ import fastifyAuth from 'fastify-auth';
 import fastifySwagger from 'fastify-swagger';
 import authPlugin from './plugins/auth';
 import authRouters from './routers/auth';
+import userRouters from './routers/user';
 import { SwaggerOption } from './schemas/swagger';
 import { DuplicateField, ErrorPayload } from './types/error';
 
@@ -36,6 +37,7 @@ const buildApp = (options: FastifyServerOptions): FastifyInstance => {
   app.register(fastifyAuth);
   app.register(authPlugin);
   app.register(authRouters, { prefix: 'api/v1/auth' });
+  app.register(userRouters, { prefix: 'api/v1/users' });
   app.setErrorHandler(errorHandler);
   return app;
 };
