@@ -13,8 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    environment: 
-      name: SENDGRID_API_KEY
+    env:
+      SECRET_ACCESS_TOKEN: access@fastify#app
+      SECRET_REFRESH_TOKEN: refresh@fastify#app
 
     strategy:
       matrix:
