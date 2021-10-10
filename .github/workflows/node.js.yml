@@ -54,4 +54,4 @@ jobs:
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
         path-to-lcov: './backend/coverage/lcov.info'
-        run: echo "hello" > hello
+    - run: echo './backend/coverage/lcov.info'
