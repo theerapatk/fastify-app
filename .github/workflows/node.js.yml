@@ -14,8 +14,9 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      SECRET_ACCESS_TOKEN: access@fastify#app
-      SECRET_REFRESH_TOKEN: refresh@fastify#app
+      SECRET_ACCESS_TOKEN: ${{ secrets.SECRET_ACCESS_TOKEN }}
+      SECRET_REFRESH_TOKEN: ${{ secrets.SECRET_REFRESH_TOKEN }}
+      SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
 
     strategy:
       matrix:
