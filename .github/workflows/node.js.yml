@@ -13,6 +13,8 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    environment: 
+      name: SENDGRID_API_KEY
 
     strategy:
       matrix:
@@ -39,5 +41,3 @@ jobs:
       working-directory: ./backend
     - run: npm test
       working-directory: ./backend
-      env:
-          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
