@@ -4,7 +4,7 @@ const config: Config.InitialOptions = {
   verbose: true,
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testPathIgnorePatterns: ['.d.ts'],
+  modulePathIgnorePatterns: ['<rootDir>/dist/'],
 };
 
 export default config;
