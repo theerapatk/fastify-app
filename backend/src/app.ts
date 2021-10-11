@@ -28,6 +28,7 @@ const errorHandler = (
   };
   if (error.duplicateFields) errorPayload.error.duplicateFields = error.duplicateFields;
   reply.status(reply.statusCode || 500).send(errorPayload);
+  console.log('test');
 };
 
 const buildApp = (options: FastifyServerOptions): FastifyInstance => {
