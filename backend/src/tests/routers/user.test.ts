@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/user';
 import RoleOption from '../../utils/enum';
 import buildTestApp from '../buildTestApp';
-// import { register } from './auth.test';
 
 const app = buildTestApp();
 
@@ -202,6 +201,26 @@ describe('/api/v1/users', () => {
 
       expect(response.statusCode).toBe(401);
       expect(response.json().error.message).toContain('jwt malformed');
+    });
+
+    it('should handle user not found', async () => {
+      const registerResponse = await register();
+      const token = registerResponse.json().accessToken;
+      const decodedToken = jwt.verify(
+        token,
+        process.env.SECRET_ACCESS_TOKEN as string
+      ) as jwt.JwtPayload;
+      jest.spyOn(UserModel, 'findOne').mockImplementationOnce(
+        () =>
+          ({
+            lean: jest.fn().mockReturnValue(null),
+          } as any)
+      );
+
+      const response = await getUser(token, decodedToken.user._id);
+
+      expect(response.statusCode).toBe(404);
+      expect(response.json().error.message).toContain('User not found');
     });
   });
 });
