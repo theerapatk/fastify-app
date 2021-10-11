@@ -2,6 +2,7 @@ import mailService from '@sendgrid/mail';
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/user';
+import { MongoServerError } from '../../types/error';
 import RoleOption from '../../utils/enum';
 import buildTestApp from '../buildTestApp';
 
@@ -108,6 +109,24 @@ describe('/api/v1/auth', () => {
       expect(duplicateFields.length).toEqual(1);
       expect(duplicateFields[0].field).toEqual('username');
       expect(duplicateFields[0].value).toEqual(username);
+    });
+
+    it('should handle MongoServerError given #save() failed to execute', async () => {
+      await register();
+      const error = new Error('MongoError') as MongoServerError;
+      error.name = 'MongoServerError';
+      error.code = 11000;
+      jest.spyOn(UserModel.prototype, 'save').mockRejectedValueOnce(error);
+
+      const response = await register({
+        username: 'myusername',
+        email: 'test1@test.com',
+        password: '12345678',
+        firstName: 'test1',
+        lastName: 'test',
+      });
+
+      expect(response.statusCode).toBe(409);
     });
   });
 
@@ -333,6 +352,25 @@ describe('/api/v1/auth', () => {
 
       expect(response.statusCode).toBe(404);
       expect(response.json().error.message).toEqual('Invalid token');
+    });
+
+    it('should handle internal server error', async () => {
+      await register();
+      const user = await UserModel.findOne({
+        email: registerBody.email,
+      }).lean();
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => ({
+        user: {
+          email: registerBody.email,
+          password: user?.password,
+        },
+      }));
+      jest.spyOn(UserModel, 'findOneAndUpdate').mockResolvedValueOnce(null);
+
+      const response = await resetPassword({ password: '87654321' });
+
+      expect(response.statusCode).toBe(500);
+      expect(response.json().error.message).toEqual('Failed to reset password');
     });
   });
 
