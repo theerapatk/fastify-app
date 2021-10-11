@@ -27,4 +27,4 @@ const SwaggerOption: SwaggerOptions = {
   },
 };
 
-export default SwaggerOption
+export default SwaggerOption;
