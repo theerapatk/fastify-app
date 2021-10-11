@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "test": "jest --coverage --detectOpenHandles && coveralls < ./coverage/lcov.info",
+    "test": "jest --coverage --runInBand && coveralls < ./coverage/lcov.info",
     "test:watch": "jest --watch --detectOpenHandles",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
