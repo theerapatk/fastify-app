@@ -1,6 +1,6 @@
 import { getModelForClass, index, prop } from '@typegoose/typegoose';
 // import { Field, ObjectType } from 'type-graphql';
-import { RoleOption } from '../utils/enum';
+import RoleOption from '../utils/enum';
 
 @index({ firstName: 1, lastName: 1 }, { unique: true })
 // @ObjectType({ description: 'User Model' })

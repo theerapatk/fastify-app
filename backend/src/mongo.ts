@@ -2,7 +2,7 @@ import { FastifyInstance } from 'fastify';
 import mongoose from 'mongoose';
 import config from './config';
 
-const connectMongoDB = async (app: FastifyInstance) => {
+const connectMongoDB = async (app: FastifyInstance): Promise<void> => {
   try {
     mongoose.connection.on('error', (err) => {
       app.log.error({ actor: 'MongoDB' }, err.message);

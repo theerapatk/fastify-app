@@ -1,9 +1,9 @@
 import { FastifyServerOptions } from 'fastify';
+import { v4 as uuid } from 'uuid';
+import pino from 'pino';
 import buildApp from './app';
 import config from './config';
 import connectMongoDB from './mongo';
-import { v4 as uuid } from 'uuid';
-import pino from 'pino';
 
 const logger = pino({
   prettyPrint: {
@@ -16,9 +16,7 @@ const logger = pino({
 
 const options: FastifyServerOptions = {
   logger,
-  genReqId(req) {
-    return uuid();
-  },
+  genReqId: () => uuid(),
 };
 
 const startServer = async () => {

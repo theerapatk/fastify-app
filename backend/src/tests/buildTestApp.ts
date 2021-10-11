@@ -15,7 +15,7 @@ const logger = pino({
   level: 'error',
 });
 
-export const buildTestApp = (): FastifyInstance => {
+const buildTestApp = (): FastifyInstance => {
   setupEnv();
   const app = buildApp({ logger });
 
@@ -40,3 +40,5 @@ export const buildTestApp = (): FastifyInstance => {
 
   return app;
 };
+
+export default buildTestApp;

@@ -2,8 +2,8 @@ import mailService from '@sendgrid/mail';
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/user';
-import { RoleOption } from '../../utils/enum';
-import { buildTestApp } from '../buildTestApp';
+import RoleOption from '../../utils/enum';
+import buildTestApp from '../buildTestApp';
 
 const app = buildTestApp();
 
@@ -15,15 +15,12 @@ describe('/api/v1/auth', () => {
     lastName: 'test',
   };
 
-  const register = async (
-    payload = registerBody
-  ): Promise<LightMyRequestResponse> => {
-    return app.inject({
+  const register = async (payload = registerBody): Promise<LightMyRequestResponse> =>
+    app.inject({
       url: '/api/v1/auth/register',
       method: 'POST',
       payload,
     });
-  };
 
   describe('POST /register', () => {
     it('should register user', async () => {
@@ -74,9 +71,7 @@ describe('/api/v1/auth', () => {
         const response = await register(testCase.body);
 
         expect(response.statusCode).toBe(400);
-        expect(response.json().error.message).toContain(
-          testCase.errorFieldName
-        );
+        expect(response.json().error.message).toContain(testCase.errorFieldName);
       });
     });
 
@@ -85,10 +80,8 @@ describe('/api/v1/auth', () => {
       const response = await register();
 
       expect(response.statusCode).toBe(409);
-      expect(response.json().error.message).toEqual(
-        'Duplicate fields in database'
-      );
-      const duplicateFields = response.json().error.duplicateFields;
+      expect(response.json().error.message).toEqual('Duplicate fields in database');
+      const { duplicateFields } = response.json().error;
       expect(duplicateFields.length).toEqual(2);
       expect(duplicateFields[0].field).toEqual('email');
       expect(duplicateFields[0].value).toEqual(registerBody.email);
@@ -110,10 +103,8 @@ describe('/api/v1/auth', () => {
       });
 
       expect(response.statusCode).toBe(409);
-      expect(response.json().error.message).toEqual(
-        'Duplicate fields in database'
-      );
-      const duplicateFields = response.json().error.duplicateFields;
+      expect(response.json().error.message).toEqual('Duplicate fields in database');
+      const { duplicateFields } = response.json().error;
       expect(duplicateFields.length).toEqual(1);
       expect(duplicateFields[0].field).toEqual('username');
       expect(duplicateFields[0].value).toEqual(username);
@@ -126,15 +117,12 @@ describe('/api/v1/auth', () => {
       password: registerBody.password,
     };
 
-    const login = async (
-      payload = loginBody
-    ): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    const login = async (payload = loginBody): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: '/api/v1/auth/login',
         method: 'POST',
         payload,
       });
-    };
 
     it('should login user', async () => {
       await register();
@@ -163,9 +151,7 @@ describe('/api/v1/auth', () => {
         const response = await login(testCase.body);
 
         expect(response.statusCode).toBe(400);
-        expect(response.json().error.message).toContain(
-          testCase.errorFieldName
-        );
+        expect(response.json().error.message).toContain(testCase.errorFieldName);
       });
     });
 
@@ -198,13 +184,12 @@ describe('/api/v1/auth', () => {
   describe('POST /refresh-token', () => {
     const refreshToken = async (payload: {
       refreshToken?: string;
-    }): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    }): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: '/api/v1/auth/refresh-token',
         method: 'POST',
         payload,
       });
-    };
 
     it('should refresh token', async () => {
       const registerResponse = await register();
@@ -222,41 +207,36 @@ describe('/api/v1/auth', () => {
       expect(response.json().error.message).toContain('refreshToken');
     });
 
-    [{ shouldDeleteMany: false }, { shouldDeleteMany: true }].forEach(
-      (testCase) => {
-        it('should handle invalid token', async () => {
-          const registerResponse = await register();
-          let refreshTokenBody = { refreshToken: 'invalid.token' };
-          if (testCase.shouldDeleteMany) {
-            await UserModel.deleteMany();
-            refreshTokenBody = registerResponse.json();
-          }
-          const response = await refreshToken(refreshTokenBody);
+    [{ shouldDeleteMany: false }, { shouldDeleteMany: true }].forEach((testCase) => {
+      it('should handle invalid token', async () => {
+        const registerResponse = await register();
+        let refreshTokenBody = { refreshToken: 'invalid.token' };
+        if (testCase.shouldDeleteMany) {
+          await UserModel.deleteMany();
+          refreshTokenBody = registerResponse.json();
+        }
+        const response = await refreshToken(refreshTokenBody);
 
-          expect(response.statusCode).toBe(401);
-        });
-      }
-    );
+        expect(response.statusCode).toBe(401);
+      });
+    });
   });
 
   describe('POST /email-reset-password', () => {
     const emailResetPassword = async (payload: {
       email?: string;
-    }): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    }): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: '/api/v1/auth/email-reset-password',
         method: 'POST',
         payload,
       });
-    };
 
     it('should email a reset password link', async () => {
       await register();
       const mock = jest
         .spyOn(mailService, 'send')
-        .mockImplementationOnce(async () => {
-          return [{} as any, {}];
-        });
+        .mockImplementationOnce(async () => [{} as any, {}]);
 
       await emailResetPassword({ email: registerBody.email });
 
@@ -293,27 +273,24 @@ describe('/api/v1/auth', () => {
         password?: string;
       },
       queryParam = 'token=test.token'
-    ): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    ): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: `/api/v1/auth/reset-password?${queryParam}`,
         method: 'POST',
         payload,
       });
-    };
 
     it('should reset password', async () => {
       await register();
       const user = await UserModel.findOne({
         email: registerBody.email,
       }).lean();
-      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
-        return {
-          user: {
-            email: registerBody.email,
-            password: user?.password,
-          },
-        };
-      });
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => ({
+        user: {
+          email: registerBody.email,
+          password: user?.password,
+        },
+      }));
       const response = await resetPassword({ password: '87654321' });
 
       expect(response.statusCode).toBe(200);
@@ -340,22 +317,18 @@ describe('/api/v1/auth', () => {
         const response = await resetPassword(requestBody, queryParam);
 
         expect(response.statusCode).toBe(400);
-        expect(response.json().error.message).toContain(
-          testCase.errorFieldName
-        );
+        expect(response.json().error.message).toContain(testCase.errorFieldName);
       });
     });
 
     it('should handle invalid token', async () => {
       await register();
-      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => {
-        return {
-          user: {
-            email: registerBody.email,
-            password: 'invalid.password',
-          },
-        };
-      });
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => ({
+        user: {
+          email: registerBody.email,
+          password: 'invalid.password',
+        },
+      }));
       const response = await resetPassword({ password: '87654321' });
 
       expect(response.statusCode).toBe(404);
@@ -385,8 +358,8 @@ describe('/api/v1/auth', () => {
     expectedBody: Record<string, string | undefined>
   ) => {
     const decodedToken = jwt.verify(token, secret) as jwt.JwtPayload;
-    const iat = new Date(decodedToken.iat! * 1000);
-    const exp = new Date(decodedToken.exp! * 1000);
+    const iat = new Date((decodedToken.iat ?? 0) * 1000);
+    const exp = new Date((decodedToken.exp ?? 0) * 1000);
     const expiresIn = Math.abs(exp.getMinutes() - iat.getMinutes());
     if (expiresIn === 0) {
       const diffInMillisec = Math.abs(Number(exp) - Number(iat));
@@ -399,14 +372,10 @@ describe('/api/v1/auth', () => {
     Object.keys(decodedToken.user).forEach((key: string) => {
       if (key === 'roles') {
         expect(decodedToken.user[key]).toEqual([RoleOption.POKEMON_TRAINER]);
+      } else if (key !== '_id') {
+        expect(decodedToken.user[key]).toEqual(expectedBody[key]);
       } else {
-        if (key !== '_id') {
-          expect(decodedToken.user[key]).toEqual(expectedBody[key]);
-        } else {
-          expect(decodedToken.user).toEqual(
-            expect.objectContaining({ _id: expect.any(String) })
-          );
-        }
+        expect(decodedToken.user).toEqual(expect.objectContaining({ _id: expect.any(String) }));
       }
     });
   };

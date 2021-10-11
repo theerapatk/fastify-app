@@ -7,7 +7,7 @@ const authRouters = async (
     auth?: any;
     authenticate?: any;
   }
-) => {
+): Promise<void> => {
   app.addHook('preHandler', app.auth([app.authenticate]));
   app.get('/', { schema: userSchema.getAll }, userHandler.getAll);
   app.get('/:id', { schema: userSchema.getOne }, userHandler.getOne);

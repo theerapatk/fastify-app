@@ -1,6 +1,6 @@
 import { SwaggerOptions } from 'fastify-swagger';
 
-export const SwaggerOption: SwaggerOptions = {
+const SwaggerOption: SwaggerOptions = {
   exposeRoute: true,
   swagger: {
     info: {
@@ -26,3 +26,5 @@ export const SwaggerOption: SwaggerOptions = {
     },
   },
 };
+
+export default SwaggerOption

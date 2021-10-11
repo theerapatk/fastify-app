@@ -1,5 +1,5 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
-import { RoleOption } from '../utils/enum';
+import { FastifyRequest } from 'fastify';
+import RoleOption from '../utils/enum';
 
 export type RegisterRequest = FastifyRequest<{
   Body: {

@@ -1,4 +1,4 @@
-export enum RoleOption {
+enum RoleOption {
   POKEMON_TRAINER = 'Pokémon Trainer',
   POKEMON_MASTER = 'Pokémon Master',
   GYM_LEADER = 'Gym Leader',
@@ -6,3 +6,5 @@ export enum RoleOption {
   POKEMON_CHAMPION = 'Pokémon Champion',
   ADMIN = 'Admin',
 }
+
+export default RoleOption;

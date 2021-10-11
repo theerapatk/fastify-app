@@ -15,14 +15,9 @@ import {
   UserResponse,
 } from '../types/auth';
 import { MongoServerError } from '../types/error';
-import {
-  getAccessToken,
-  getRefreshToken,
-  hashPassword,
-  signJwtToken,
-} from '../utils';
+import { getAccessToken, getRefreshToken, hashPassword, signJwtToken } from '../utils';
 
-mailService.setApiKey(config.sendGridApiKey!);
+mailService.setApiKey(config.sendGridApiKey as string);
 
 const register = async (
   request: RegisterRequest,
@@ -32,9 +27,7 @@ const register = async (
 
   try {
     request.body.password = hashPassword(request.body.password);
-    const { _id, email, firstName, lastName, roles } = await new UserModel(
-      request.body
-    ).save();
+    const { _id, email, firstName, lastName, roles } = await new UserModel(request.body).save();
     const userResponse = { _id, email, firstName, lastName, roles };
     reply.code(201);
     return buildAuthTokenResponse(userResponse);
@@ -63,13 +56,12 @@ const login = async (request: LoginRequest): Promise<AuthTokenResponse> => {
   return buildAuthTokenResponse({ _id, email, firstName, lastName, roles });
 };
 
-const refreshToken = async (request: RefreshTokenRequest) => {
+const refreshToken = async (request: RefreshTokenRequest): Promise<AuthTokenResponse | unknown> => {
   try {
-    const { refreshToken } = request.body;
-    const decodedToken = verify(
-      refreshToken,
-      config.token.refresh as string
-    ) as JwtPayload;
+    const {
+      body: { refreshToken },
+    } = request;
+    const decodedToken = verify(refreshToken, config.token.refresh as string) as JwtPayload;
     const user = await UserModel.findOne({
       email: decodedToken.user.email,
     }).lean();
@@ -88,66 +80,58 @@ const refreshToken = async (request: RefreshTokenRequest) => {
   }
 };
 
-const emailResetPassword = async (request: EmailResetPasswordRequest) => {
-  try {
-    const { email } = request.body;
-    const user = await UserModel.findOne({ email }).lean();
-    if (!user) throw new createError.NotFound('Email not found');
+const emailResetPassword = async (
+  request: EmailResetPasswordRequest
+): Promise<{ message: string } | unknown> => {
+  const { email } = request.body;
+  const user = await UserModel.findOne({ email }).lean();
+  if (!user) throw new createError.NotFound('Email not found');
 
-    const token = signJwtToken({ user }, config.token.access as string, '3m');
-    const message: MailDataRequired = {
-      from: 'jojo.theerapat@hotmail.com',
-      to: email,
-      subject: 'Request to reset password',
-      html: `<div>
+  const token = signJwtToken({ user }, config.token.access as string, '3m');
+  const message: MailDataRequired = {
+    from: 'jojo.theerapat@hotmail.com',
+    to: email,
+    subject: 'Request to reset password',
+    html: `<div>
                  <p>Please use below link to reset your password</p>
                  <a href='http://localhost:3000/api/v1/auth/reset-password?token=${token}' target='blank'>Reset Password</a>
              </div>`,
-      mailSettings: { sandboxMode: { enable: config.env === 'test' } },
-    };
+    mailSettings: { sandboxMode: { enable: config.env === 'test' } },
+  };
 
-    const response = await mailService.send(message);
-    if (!response || response[0]?.statusCode !== 202) {
-      throw new createError.BadGateway(`Unable to send the email to ${email}`);
-    }
-    return { message: `We have sent the reset password link to ${email}` };
-  } catch (error) {
-    throw error;
+  const response = await mailService.send(message);
+  if (!response || response[0]?.statusCode !== 202) {
+    throw new createError.BadGateway(`Unable to send the email to ${email}`);
   }
+  return { message: `We have sent the reset password link to ${email}` };
 };
 
-const resetPassword = async (request: ResetPasswordRequest) => {
-  try {
-    const { token } = request.query;
-    const { password } = request.body;
-    const decodedToken = verify(
-      token,
-      config.token.access as string
-    ) as JwtPayload;
-    const user = await UserModel.findOne({
-      email: decodedToken.user.email,
-      password: decodedToken.user.password,
-    }).lean();
-    if (!user) throw new createError.NotFound('Invalid token');
+const resetPassword = async (
+  request: ResetPasswordRequest
+): Promise<{ message: string } | unknown> => {
+  const { token } = request.query;
+  const { password } = request.body;
+  const decodedToken = verify(token, config.token.access as string) as JwtPayload;
+  const user = await UserModel.findOne({
+    email: decodedToken.user.email,
+    password: decodedToken.user.password,
+  }).lean();
+  if (!user) throw new createError.NotFound('Invalid token');
 
-    const hashedPassword = hashPassword(password);
-    const updatedUser = await UserModel.findOneAndUpdate(
-      { email: user.email },
-      { password: hashedPassword },
-      { new: true }
-    );
-    if (!updatedUser)
-      throw new createError.InternalServerError('Failed to reset password');
+  const hashedPassword = hashPassword(password);
+  const updatedUser = await UserModel.findOneAndUpdate(
+    { email: user.email },
+    { password: hashedPassword },
+    { new: true }
+  );
+  if (!updatedUser) throw new createError.InternalServerError('Failed to reset password');
 
-    return { message: 'Successfully reset password' };
-  } catch (error) {
-    throw error;
-  }
+  return { message: 'Successfully reset password' };
 };
 
-const validateUniqueFieldConstraints = async (doc: User) => {
+const validateUniqueFieldConstraints = async (doc: User): Promise<void> => {
   const { username, email, firstName, lastName } = doc;
-  const orQuery: {}[] = [{ email }, { firstName, lastName }];
+  const orQuery: Record<string, unknown>[] = [{ email }, { firstName, lastName }];
   if (username) orQuery.push({ username });
   const existingUser = await UserModel.findOne({ $or: orQuery }).lean();
   if (existingUser) {
@@ -158,10 +142,7 @@ const validateUniqueFieldConstraints = async (doc: User) => {
     if (email === existingUser.email) {
       duplicateFields.push({ field: 'email', value: email });
     }
-    if (
-      firstName === existingUser.firstName &&
-      lastName === existingUser.lastName
-    ) {
+    if (firstName === existingUser.firstName && lastName === existingUser.lastName) {
       duplicateFields.push({
         field: 'firstName and lastName',
         value: `${firstName} ${lastName}`,
@@ -175,12 +156,10 @@ const validateUniqueFieldConstraints = async (doc: User) => {
   }
 };
 
-const buildAuthTokenResponse = (user: UserResponse): AuthTokenResponse => {
-  return {
-    accessToken: getAccessToken(user),
-    refreshToken: getRefreshToken(user),
-  };
-};
+const buildAuthTokenResponse = (user: UserResponse): AuthTokenResponse => ({
+  accessToken: getAccessToken(user),
+  refreshToken: getRefreshToken(user),
+});
 
 export default {
   register,

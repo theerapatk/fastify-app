@@ -4,11 +4,7 @@ import fp from 'fastify-plugin';
 import config from '../config';
 
 const handler = async (request: FastifyRequest): Promise<void> => {
-  try {
-    await request.jwtVerify();
-  } catch (error) {
-    throw error;
-  }
+  await request.jwtVerify();
 };
 
 const auth: FastifyPluginAsync = async (fastify: FastifyInstance) => {

@@ -1,8 +1,8 @@
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
 import { UserModel } from '../../models/user';
-import { RoleOption } from '../../utils/enum';
-import { buildTestApp } from '../buildTestApp';
+import RoleOption from '../../utils/enum';
+import buildTestApp from '../buildTestApp';
 // import { register } from './auth.test';
 
 const app = buildTestApp();
@@ -16,26 +16,22 @@ describe('/api/v1/users', () => {
     lastName: 'test',
   };
 
-  const register = async (
-    payload = registerBody
-  ): Promise<LightMyRequestResponse> => {
-    return app.inject({
+  const register = async (payload = registerBody): Promise<LightMyRequestResponse> =>
+    app.inject({
       url: '/api/v1/auth/register',
       method: 'POST',
       payload,
     });
-  };
 
   const login = async (payload: {
     username: string;
     password: string;
-  }): Promise<LightMyRequestResponse> => {
-    return app.inject({
+  }): Promise<LightMyRequestResponse> =>
+    app.inject({
       url: '/api/v1/auth/login',
       method: 'POST',
       payload,
     });
-  };
 
   beforeEach(async () => {
     await new UserModel({
@@ -48,17 +44,14 @@ describe('/api/v1/users', () => {
   });
 
   describe('GET /', () => {
-    const getUsers = async (
-      accessToken: string
-    ): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    const getUsers = async (accessToken: string): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: apiPrefix,
         method: 'GET',
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       });
-    };
 
     it(`should get all users given the role is 'Admin'`, async () => {
       await register();
@@ -94,9 +87,7 @@ describe('/api/v1/users', () => {
       const response = await getUsers(loginResponse.json().accessToken);
 
       expect(response.statusCode).toBe(403);
-      expect(response.json().error.message).toEqual(
-        'You are not allowed to access this resource'
-      );
+      expect(response.json().error.message).toEqual('You are not allowed to access this resource');
     });
 
     it('should validate request given request headers is not provided', async () => {
@@ -120,18 +111,14 @@ describe('/api/v1/users', () => {
   });
 
   describe('GET /:id', () => {
-    const getUser = async (
-      accessToken: string,
-      id: string
-    ): Promise<LightMyRequestResponse> => {
-      return app.inject({
+    const getUser = async (accessToken: string, id: string): Promise<LightMyRequestResponse> =>
+      app.inject({
         url: `${apiPrefix}/${id}`,
         method: 'GET',
         headers: {
           authorization: `Bearer ${accessToken}`,
         },
       });
-    };
 
     it('should get one user', async () => {
       const registerResponse = await register();

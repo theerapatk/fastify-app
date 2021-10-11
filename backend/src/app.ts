@@ -11,7 +11,7 @@ import fastifySwagger from 'fastify-swagger';
 import authPlugin from './plugins/auth';
 import authRouters from './routers/auth';
 import userRouters from './routers/user';
-import { SwaggerOption } from './schemas/swagger';
+import SwaggerOption from './schemas/swagger';
 import { DuplicateField, ErrorPayload } from './types/error';
 
 const errorHandler = (
