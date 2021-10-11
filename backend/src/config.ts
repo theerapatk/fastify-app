@@ -9,10 +9,10 @@ const config = {
     uri: process.env.MONGO_URI || 'mongodb://localhost:27017/fastify-app',
   },
   token: {
-    access: process.env.SECRET_ACCESS_TOKEN || null,
-    refresh: process.env.SECRET_REFRESH_TOKEN || null,
+    access: process.env.SECRET_ACCESS_TOKEN as string,
+    refresh: process.env.SECRET_REFRESH_TOKEN as string,
   },
-  sendGridApiKey: process.env.SENDGRID_API_KEY,
+  sendGridApiKey: process.env.SENDGRID_API_KEY as string,
 };
 
 export default config;

@@ -17,7 +17,7 @@ import {
 import { MongoServerError } from '../types/error';
 import { getAccessToken, getRefreshToken, hashPassword, signJwtToken } from '../utils';
 
-mailService.setApiKey(config.sendGridApiKey as string);
+mailService.setApiKey(config.sendGridApiKey);
 
 const register = async (
   request: RegisterRequest,
