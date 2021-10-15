@@ -13,7 +13,10 @@ export const getAccessToken = (user: UserResponse): string =>
 export const getRefreshToken = (user: UserResponse): string =>
   signJwtToken({ user }, config.token.refresh as string, '1y');
 
-export const isAdmin = (roles: RoleOption[]): boolean => roles.includes(RoleOption.ADMIN);
+export const isAdmin = (roles: RoleOption[]): boolean => {
+  if (!roles) return false;
+  return roles.includes(RoleOption.ADMIN);
+};
 
 export const signJwtToken = (payload: string | object, secret: Secret, expiresIn: string): string =>
   sign(payload, secret, { issuer: 'jojo-tk', expiresIn });

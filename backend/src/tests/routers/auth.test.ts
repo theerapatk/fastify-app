@@ -1,6 +1,7 @@
 import mailService from '@sendgrid/mail';
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
+import { DUPLICATE_KEY_ERROR_CODE } from '../../handlers/auth';
 import { UserModel } from '../../models/user';
 import { MongoServerError } from '../../types/error';
 import RoleOption from '../../utils/enum';
@@ -115,7 +116,7 @@ describe('/api/v1/auth', () => {
       await register();
       const error = new Error('MongoError') as MongoServerError;
       error.name = 'MongoServerError';
-      error.code = 11000;
+      error.code = DUPLICATE_KEY_ERROR_CODE;
       jest.spyOn(UserModel.prototype, 'save').mockRejectedValueOnce(error);
 
       const response = await register({

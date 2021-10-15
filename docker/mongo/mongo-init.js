@@ -8,12 +8,13 @@ db.users.insertMany([
     password: "$2b$10$Ar0ZLiA1iobdr/g9S66nBe5UYVUVwCKNTvojseQw38FPsqddxlz0e",
     firstName: "jojo",
     lastName: "theerapat",
-    role: "Admin",
+    roles: ["Admin"],
   },
   {
-    email: "test@test.com",
+    email: "brock@test.com",
     password: "$2b$10$Ar0ZLiA1iobdr/g9S66nBe5UYVUVwCKNTvojseQw38FPsqddxlz0e",
-    firstName: "test",
-    lastName: "test",
+    firstName: "Brock",
+    lastName: "Takeshi",
+    roles: ["Gym Leader"],
   },
 ]);

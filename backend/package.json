@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "test": "jest --coverage && coveralls < ./coverage/lcov.info",
-    "test:watch": "jest --watch --detectOpenHandles",
+    "test:watch": "jest --watchAll --detectOpenHandles",
     "build": "tsc -p tsconfig.json",
     "start": "node dist/index.js",
     "lint": "eslint . --ext .ts --format=pretty",

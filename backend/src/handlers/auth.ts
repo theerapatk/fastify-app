@@ -19,6 +19,8 @@ import { getAccessToken, getRefreshToken, hashPassword, signJwtToken } from '../
 
 mailService.setApiKey(config.sendGridApiKey);
 
+export const DUPLICATE_KEY_ERROR_CODE = 11000;
+
 const register = async (
   request: RegisterRequest,
   reply: FastifyReply
@@ -33,7 +35,7 @@ const register = async (
     return buildAuthTokenResponse(userResponse);
   } catch (error) {
     if (error instanceof Error && error.name === 'MongoServerError') {
-      if ((error as MongoServerError).code === 11000) {
+      if ((error as MongoServerError).code === DUPLICATE_KEY_ERROR_CODE) {
         throw new createError.Conflict(error.message);
       }
     }
@@ -64,12 +66,13 @@ const refreshToken = async (request: RefreshTokenRequest): Promise<AuthTokenResp
     const decodedToken = verify(refreshToken, config.token.refresh as string) as JwtPayload;
     const user = await UserModel.findOne({
       email: decodedToken.user.email,
-    }).lean();
+    })
+      .select('_id email firstName lastName roles')
+      .lean();
     if (!user) throw new createError.Unauthorized();
 
-    const { _id, email, firstName, lastName, roles } = user;
     return {
-      accessToken: getAccessToken({ _id, email, firstName, lastName, roles }),
+      accessToken: getAccessToken(user),
       refreshToken,
     };
   } catch (error) {
