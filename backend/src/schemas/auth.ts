@@ -37,6 +37,7 @@ const register: TagsSchema = {
         type: 'string',
         maxLength: 32,
       },
+      additionalProperties: false,
     },
   },
   response: {
@@ -77,6 +78,7 @@ const login: TagsSchema = {
         type: 'string',
       },
     },
+    additionalProperties: false,
   },
   response: {
     200: {
@@ -105,6 +107,7 @@ const refreshToken: TagsSchema = {
         type: 'string',
       },
     },
+    additionalProperties: false,
   },
   response: {
     200: {
@@ -145,6 +148,7 @@ const emailResetPassword: TagsSchema = {
         maxLength: 64,
       },
     },
+    additionalProperties: false,
   },
   response: {
     200: {
@@ -177,6 +181,7 @@ const resetPassword: TagsSchema = {
         type: 'string',
       },
     },
+    additionalProperties: false,
   },
   body: {
     type: 'object',
@@ -188,6 +193,7 @@ const resetPassword: TagsSchema = {
         maxLength: 24,
       },
     },
+    additionalProperties: false,
   },
   response: {
     200: {
