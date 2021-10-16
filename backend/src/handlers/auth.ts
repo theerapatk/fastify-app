@@ -63,7 +63,7 @@ const refreshToken = async (request: RefreshTokenRequest): Promise<AuthTokenResp
     const {
       body: { refreshToken },
     } = request;
-    const decodedToken = verify(refreshToken, config.token.refresh as string) as JwtPayload;
+    const decodedToken = verify(refreshToken, config.token.refresh) as JwtPayload;
     const user = await UserModel.findOne({
       email: decodedToken.user.email,
     })
@@ -90,7 +90,7 @@ const emailResetPassword = async (
   const user = await UserModel.findOne({ email }).lean();
   if (!user) throw new createError.NotFound('Email not found');
 
-  const token = signJwtToken({ user }, config.token.access as string, '3m');
+  const token = signJwtToken({ user }, config.token.access, '3m');
   const message: MailDataRequired = {
     from: 'jojo.theerapat@hotmail.com',
     to: email,
@@ -114,20 +114,20 @@ const resetPassword = async (
 ): Promise<{ message: string } | unknown> => {
   const { token } = request.query;
   const { password } = request.body;
-  const decodedToken = verify(token, config.token.access as string) as JwtPayload;
+  const decodedToken = verify(token, config.token.access) as JwtPayload;
   const user = await UserModel.findOne({
     email: decodedToken.user.email,
     password: decodedToken.user.password,
-  }).lean();
+  });
   if (!user) throw new createError.NotFound('Invalid token');
 
-  const hashedPassword = hashPassword(password);
-  const updatedUser = await UserModel.findOneAndUpdate(
-    { email: user.email },
-    { password: hashedPassword },
-    { new: true }
-  );
-  if (!updatedUser) throw new createError.InternalServerError('Failed to reset password');
+  user.password = hashPassword(password);
+
+  try {
+    await user.save();
+  } catch (error) {
+    throw new createError.InternalServerError('Failed to reset password');
+  }
 
   return { message: 'Successfully reset password' };
 };

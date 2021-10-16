@@ -366,7 +366,11 @@ describe('/api/v1/auth', () => {
           password: user?.password,
         },
       }));
-      jest.spyOn(UserModel, 'findOneAndUpdate').mockResolvedValueOnce(null);
+
+      const error = new Error('MongoError') as MongoServerError;
+      error.name = 'MongoServerError';
+      error.code = DUPLICATE_KEY_ERROR_CODE;
+      jest.spyOn(UserModel.prototype, 'save').mockRejectedValueOnce(error);
 
       const response = await resetPassword({ password: '87654321' });
 
@@ -408,7 +412,9 @@ describe('/api/v1/auth', () => {
     } else {
       expect(expiresIn).toEqual(30);
     }
-    Object.keys(decodedToken.user).forEach((key: string) => {
+    const userTokenKeys = Object.keys(decodedToken.user);
+    expect(userTokenKeys).toEqual(['_id', 'email', 'firstName', 'lastName', 'roles']);
+    userTokenKeys.forEach((key: string) => {
       if (key === 'roles') {
         expect(decodedToken.user[key]).toEqual([RoleOption.POKEMON_TRAINER]);
       } else if (key !== '_id') {

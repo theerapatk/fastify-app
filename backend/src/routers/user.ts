@@ -9,8 +9,10 @@ const authRouters = async (
   }
 ): Promise<void> => {
   app.addHook('preHandler', app.auth([app.authenticate]));
-  app.get('/', { schema: userSchema.getAll }, userHandler.getAll);
-  app.get('/:id', { schema: userSchema.getOne }, userHandler.getOne);
+  app.get('/', { schema: userSchema.getUsers }, userHandler.getUsers);
+  app.get('/:id', { schema: userSchema.getUser }, userHandler.getUser);
+  app.put('/:id', { schema: userSchema.updateUser }, userHandler.updateUser);
+  app.delete('/:id', { schema: userSchema.deleteUser }, userHandler.deleteUser);
 };
 
 export default authRouters;

@@ -6,9 +6,9 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 { 
-  "email": "test@test.com",
+  "email": "sdpgezixtcxaganirw@pp7rvv.com",
   "password": "12345678",
-  "firstName": "test",
+  "firstName": "test1",
   "lastName": "test"
 }
 
@@ -18,7 +18,7 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "test@test.com",
+  "username": "sdpgezixtcxaganirw@pp7rvv.com",
   "password": "12345678"
 }
 
@@ -35,15 +35,15 @@ POST http://localhost:3000/api/v1/auth/email-reset-password
 Content-Type: application/json
 
 { 
-  "email": "peczdhhfarwyymibyf@mrvpt.com"
+  "email": "sdpgezixtcxaganirw@pp7rvv.com"
 }
 
 ###
-POST http://localhost:3000/api/v1/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxNDcxN2JlOWFkMDA2NWRhMjljYWY3YiIsImVtYWlsIjoieGZjbndtbG1pbmt5ZHp0dHptQHBwN3J2di5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRNQTZySkc3M0IzNDFoOEJQWXVhWkp1VUlRWkNkaHIvUkhub1NablhlWnZYcFBod1JsSEVjbSIsImZpcnN0TmFtZSI6InRlc3Q3IiwibGFzdE5hbWUiOiJ0ZXN0Iiwicm9sZXMiOlsiUG9rw6ltb24gVHJhaW5lciJdLCJjcmVhdGVkQXQiOiIyMDIxLTA5LTE5VDEwOjU4OjA2LjQ3OFoiLCJ1cGRhdGVkQXQiOiIyMDIxLTA5LTE5VDEwOjU4OjA2LjQ3OFoifSwiaWF0IjoxNjMyMDQ5MjM4LCJleHAiOjE2MzIwNDk0MTgsImlzcyI6Impvam8tdGsifQ.T41AawejkDTLlKYvQI8EQOhM2Bwy3qnfCxiRSmLBe3Q
+POST http://localhost:3000/api/v1/auth/reset-password?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjYxNmE3YWM4M2ZkOTZhYWNlNDM3MzllYiIsImVtYWlsIjoic2RwZ2V6aXh0Y3hhZ2FuaXJ3QHBwN3J2di5jb20iLCJwYXNzd29yZCI6IiQyYiQxMCRWY2V6VDhuZmJjLmh3NGZTWTVJMTJlZm50VDJzd3NyRDRQZ1U0WUFMSXhnVlBTTFNLZzE4RyIsImZpcnN0TmFtZSI6InRlc3QxIiwibGFzdE5hbWUiOiJ0ZXN0Iiwicm9sZXMiOlsiUG9rw6ltb24gVHJhaW5lciJdLCJjcmVhdGVkQXQiOiIyMDIxLTEwLTE2VDA3OjEwOjAwLjI2NloiLCJ1cGRhdGVkQXQiOiIyMDIxLTEwLTE2VDA3OjEwOjQ4LjYxOVoifSwiaWF0IjoxNjM0MzY4MjYyLCJleHAiOjE2MzQzNjg0NDIsImlzcyI6Impvam8tdGsifQ.S6PmtdCJjgk1ZJ0ACvDY08bIeMKASy0u_yKhjeZy07s
 Content-Type: application/json
 
 { 
-  "password": "test1ssssss"
+  "password": "12345678"
 }
 
 ###
