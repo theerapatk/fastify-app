@@ -424,6 +424,22 @@ describe('/api/v1/users', () => {
         { field: 'email', value: 'test@test.com' },
       ]);
     });
+
+    it('should handle general error given #findByIdAndUpdate() failed to execute', async () => {
+      const registerResponse = await register();
+      const token = registerResponse.json().accessToken;
+      jest.spyOn(UserModel, 'findByIdAndUpdate').mockImplementationOnce(
+        () =>
+          ({
+            lean: jest.fn().mockRejectedValue(new Error('general error')),
+          } as any)
+      );
+
+      const response = await updateUser(token, getIdFromAccessToken(token));
+
+      expect(response.statusCode).toBe(500);
+      expect(response.json().error.message).toEqual('general error');
+    });
   });
 
   describe('DELETE /:id', () => {

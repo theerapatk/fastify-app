@@ -139,6 +139,22 @@ describe('/api/v1/auth', () => {
 
       expect(response.statusCode).toBe(409);
     });
+
+    it('should handle general error given #save() failed to execute', async () => {
+      await register();
+      jest.spyOn(UserModel.prototype, 'save').mockRejectedValueOnce(new Error('general error'));
+
+      const response = await register({
+        username: 'myusername',
+        email: 'test1@test.com',
+        password: '12345678',
+        firstName: 'test1',
+        lastName: 'test',
+      });
+
+      expect(response.statusCode).toBe(500);
+      expect(response.json().error.message).toEqual('general error');
+    });
   });
 
   describe('POST /login', () => {
