@@ -1,3 +1,4 @@
+import { FastifyReply } from 'fastify/types/reply';
 import { FastifyRequest } from 'fastify/types/request';
 import createError from 'http-errors';
 import { JwtPayload } from 'jsonwebtoken';
@@ -21,29 +22,28 @@ const getUser = async (request: UserRequestParam): Promise<UserResponse> => {
   const { _id, roles } = (request.user as JwtPayload).user as UserResponse;
   checkIfNotAdminAndSelf(roles, _id, id);
 
-  const user = await UserModel.findOne({ _id: id }).lean();
+  const user = await UserModel.findById(id).lean();
   if (!user) throw new createError.NotFound('User not found');
 
   return user;
 };
 
-const updateUser = async (request: UpdateUserRequest): Promise<{ message: string } | unknown> => {
+const updateUser = async (request: UpdateUserRequest, reply: FastifyReply): Promise<void> => {
   const { id } = request.params;
   const { _id, roles } = (request.user as JwtPayload).user as UserResponse;
   checkIfNotAdminAndSelf(roles, _id, id);
-
-  const user = await UserModel.updateOne({ _id: id });
+  const user = await UserModel.findByIdAndUpdate(id, request.body);
   if (!user) throw new createError.NotFound('User not found');
-
-  return { message: 'success' };
+  reply.code(204).send();
 };
 
-const deleteUser = async (request: UserRequestParam): Promise<{ message: string } | unknown> => {
+const deleteUser = async (request: UserRequestParam, reply: FastifyReply): Promise<void> => {
   const { id } = request.params;
   const { _id, roles } = (request.user as JwtPayload).user as UserResponse;
   checkIfNotAdminAndSelf(roles, _id, id);
-  await UserModel.deleteOne({ _id: id });
-  return { message: 'success' };
+  const user = await UserModel.findByIdAndDelete(id);
+  if (!user) throw new createError.NotFound('User not found');
+  reply.code(204).send();
 };
 
 const checkIfNotAdminAndSelf = (

@@ -91,10 +91,9 @@ const updateUser: TagsSchema = {
     },
   },
   response: {
-    200: {
-      description: 'OK',
+    204: {
+      description: 'No Content',
       type: 'object',
-      properties: userProperties,
     },
     404: {
       description: 'Not Found',
@@ -117,10 +116,9 @@ const deleteUser: TagsSchema = {
     },
   },
   response: {
-    200: {
-      description: 'OK',
+    204: {
+      description: 'No Content',
       type: 'object',
-      properties: userProperties,
     },
     404: {
       description: 'Not Found',

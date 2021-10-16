@@ -18,7 +18,7 @@ POST http://localhost:3000/api/v1/auth/login
 Content-Type: application/json
 
 { 
-  "username": "sdpgezixtcxaganirw@pp7rvv.com",
+  "username": "jojo.theerapat@hotmail.com",
   "password": "12345678"
 }
 
@@ -55,6 +55,23 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/api/v1/users/614602936772f543ddc15dd2
+GET http://localhost:3000/api/v1/users/616a81b696a35250d4b4d1f4
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+###
+PUT http://localhost:3000/api/v1/users/616a81b696a35250d4b4d1f4
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{ 
+  "email": "test@pp7rvv.com",
+  "password": "12345678",
+  "firstName": "test2",
+  "lastName": "test"
+}
+
+###
+DELETE http://localhost:3000/api/v1/users/616a81b696a35250d4b4d1f4
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
