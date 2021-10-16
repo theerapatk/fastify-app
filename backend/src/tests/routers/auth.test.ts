@@ -35,6 +35,16 @@ describe('/api/v1/auth', () => {
     [
       {
         body: {
+          username: 'teASDuihasddddjkahsdSADUIUYUSDdst',
+          email: 'test@test.com',
+          password: '1245678',
+          firstName: 'test',
+          lastName: 'test',
+        },
+        errorFieldName: 'username',
+      },
+      {
+        body: {
           email: 'testtest.com',
           password: '1245678',
           firstName: 'test',

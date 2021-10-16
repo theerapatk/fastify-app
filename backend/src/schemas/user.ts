@@ -2,6 +2,7 @@ import { errorProperties, TagsSchema } from './auth';
 
 const userProperties = {
   _id: { type: 'string' },
+  username: { type: 'string' },
   email: { type: 'string' },
   firstName: { type: 'string' },
   lastName: { type: 'string' },
@@ -67,17 +68,17 @@ const updateUser: TagsSchema = {
   },
   body: {
     type: 'object',
-    required: ['email', 'password', 'firstName', 'lastName'],
+    required: ['email', 'firstName', 'lastName'],
     properties: {
+      username: {
+        type: 'string',
+        minLength: 6,
+        maxLength: 32,
+      },
       email: {
         type: 'string',
         format: 'email',
         maxLength: 64,
-      },
-      password: {
-        type: 'string',
-        minLength: 8,
-        maxLength: 24,
       },
       firstName: {
         type: 'string',
@@ -87,8 +88,8 @@ const updateUser: TagsSchema = {
         type: 'string',
         maxLength: 32,
       },
-      additionalProperties: false,
     },
+    additionalProperties: false,
   },
   response: {
     204: {

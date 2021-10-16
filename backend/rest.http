@@ -6,9 +6,10 @@ POST http://localhost:3000/api/v1/auth/register
 Content-Type: application/json
 
 { 
-  "email": "sdpgezixtcxaganirw@pp7rvv.com",
+  "username": "my test2",
+  "email": "dgezixtcxaganirw@pp7rvv.com",
   "password": "12345678",
-  "firstName": "test1",
+  "firstName": "test2",
   "lastName": "test"
 }
 
@@ -55,19 +56,19 @@ Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/api/v1/users/616a81b696a35250d4b4d1f4
+GET http://localhost:3000/api/v1/users/616ada36db79d93b5f4fe8a8
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 ###
-PUT http://localhost:3000/api/v1/users/616a81b696a35250d4b4d1f4
+PUT http://localhost:3000/api/v1/users/616ada36db79d93b5f4fe8a8
 Authorization: Bearer {{accessToken}}
 Content-Type: application/json
 
 { 
-  "email": "test@pp7rvv.com",
-  "password": "12345678",
-  "firstName": "test2",
+  "username": "myusername",
+  "email": "test@test.com",
+  "firstName": "test1",
   "lastName": "test"
 }
 

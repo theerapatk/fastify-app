@@ -19,6 +19,11 @@ const register: TagsSchema = {
     type: 'object',
     required: ['email', 'password', 'firstName', 'lastName'],
     properties: {
+      username: {
+        type: 'string',
+        minLength: 6,
+        maxLength: 32,
+      },
       email: {
         type: 'string',
         format: 'email',
@@ -37,8 +42,8 @@ const register: TagsSchema = {
         type: 'string',
         maxLength: 32,
       },
-      additionalProperties: false,
     },
+    additionalProperties: false,
   },
   response: {
     201: {

@@ -11,7 +11,7 @@ export type UpdateUserRequest = FastifyRequest<{
     id: string;
   };
   Body: {
-    username: string;
+    username?: string;
     email: string;
     firstName: string;
     lastName: string;
