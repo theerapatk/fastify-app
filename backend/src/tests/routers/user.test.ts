@@ -1,6 +1,8 @@
 import { LightMyRequestResponse } from 'fastify';
 import jwt from 'jsonwebtoken';
+import { DUPLICATE_KEY_ERROR_CODE } from '../../handlers/auth';
 import { UserModel } from '../../models/user';
+import { MongoServerError } from '../../types/error';
 import RoleOption from '../../utils/enum';
 import buildTestApp from '../buildTestApp';
 
@@ -398,6 +400,29 @@ describe('/api/v1/users', () => {
 
       expect(response.statusCode).toBe(404);
       expect(response.json().error.message).toContain('User not found');
+    });
+
+    it('should handle MongoServerError given #findByIdAndUpdate() failed to execute', async () => {
+      const registerResponse = await register();
+      const token = registerResponse.json().accessToken;
+      const error = new Error('MongoError') as MongoServerError;
+      error.name = 'MongoServerError';
+      error.code = DUPLICATE_KEY_ERROR_CODE;
+      error.keyValue = { email: 'test@test.com' };
+      jest.spyOn(UserModel, 'findByIdAndUpdate').mockImplementationOnce(
+        () =>
+          ({
+            lean: jest.fn().mockRejectedValue(error),
+          } as any)
+      );
+
+      const response = await updateUser(token, getIdFromAccessToken(token));
+
+      expect(response.statusCode).toBe(409);
+      expect(response.json().error.message).toEqual('Duplicate fields in database');
+      expect(response.json().error.duplicateFields).toEqual([
+        { field: 'email', value: 'test@test.com' },
+      ]);
     });
   });
 
